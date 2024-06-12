@@ -21,14 +21,16 @@ contract AstrodiceNFT is ERC721, VRFConsumerBase, Ownable {
         string planetImage;
         string signImage;
         string houseImage;
+        string planetSymbol;
     }
 
-    string[] public planets = ["Planet1", "Planet2", "Planet3", /*...*/ "Planet12"];
-    string[] public signs = ["Sign1", "Sign2", "Sign3", /*...*/ "Sign12"];
-    string[] public houses = ["House1", "House2", "House3", /*...*/ "House12"];
+    string[] public planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" "North Node", "South Node"];
+    string[] public signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+    string[] public houses = ["1st House", "2nd House", "3rd House", "4th House", "5th House", "6th House", "7th House", "8th House", "9th House", "10th House", "11th House", "12th House"];
     string[] public planetImages = ["planetImage1.png", "planetImage2.png", /*...*/ "planetImage12.png"];
     string[] public signImages = ["signImage1.png", "signImage2.png", /*...*/ "signImage12.png"];
     string[] public houseImages = ["houseImage1.png", "houseImage2.png", /*...*/ "houseImage12.png"];
+    string[] public planetSymbols = ["\u2648", "\u2649", "\u2650", /*...*/ "\u265B"]
 
     mapping(uint256 => Astrodice) public tokenIdToAstrodice;
     mapping(bytes32 => address) public requestIdToSender;
