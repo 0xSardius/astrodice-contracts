@@ -30,7 +30,7 @@ contract AstrodiceNFT is ERC721, VRFConsumerBase, Ownable {
     string[] public planetImages = ["planetImage1.png", "planetImage2.png", /*...*/ "planetImage12.png"];
     string[] public signImages = ["signImage1.png", "signImage2.png", /*...*/ "signImage12.png"];
     string[] public houseImages = ["houseImage1.png", "houseImage2.png", /*...*/ "houseImage12.png"];
-    string[] public planetSymbols = ["\u2648", "\u2649", "\u2650", /*...*/ "\u265B"]
+    string[] public planetSymbols = ["\u2648", "\u2649", "\u2650", /*...*/ "\u265B"];
 
     mapping(uint256 => Astrodice) public tokenIdToAstrodice;
     mapping(bytes32 => address) public requestIdToSender;
