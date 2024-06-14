@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBase.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "base64-sol/base64.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract AstrodiceNFT is ERC721, VRFConsumerBase, Ownable {
     using Strings for uint256;
