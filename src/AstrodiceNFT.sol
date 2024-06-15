@@ -64,6 +64,17 @@ contract AstrodiceNFT is ERC721, Ownable {
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        Astrodice memory astrodice = tokenIdToAstrodice[tokenId];
+        string memory json = Base64.encode(bytes(string(abi.encodePacked(
+            '{"name": "Astrodice #', tokenId.toString(), '", "description": "An Astrodice NFT", "attributes": [',
+            '{"trait_type": "Planet", "value": "', astrodice.planet, '"},',
+            '{"trait_type": "Sign", "value": "', astrodice.sign, '"},',
+            '{"trait_type": "House", "value": "', astrodice.house, '"}],',
+            '"planet_symbol": "', astrodice.planetSymbol, '",',
+            '"sign_symbol": "', astrodice.signSymbol, '"}'
+        ))));
+        return string(abi.encodePacked("data:application/json;base64,", json));
     }
 
 }
