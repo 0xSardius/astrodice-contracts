@@ -16,9 +16,6 @@ contract AstrodiceNFT is ERC721, Ownable {
         string planet;
         string sign;
         string house;
-        // string planetImage;
-        // string signImage;
-        // string houseImage;
         string planetSymbol;
         string signSymbol;
     }
@@ -26,15 +23,12 @@ contract AstrodiceNFT is ERC721, Ownable {
     string[] public planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" "North Node", "South Node"];
     string[] public signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
     string[] public houses = ["1st House", "2nd House", "3rd House", "4th House", "5th House", "6th House", "7th House", "8th House", "9th House", "10th House", "11th House", "12th House"];
-    // string[] public planetImages = ["planetImage1.png", "planetImage2.png", /*...*/ "planetImage12.png"];
-    // string[] public signImages = ["signImage1.png", "signImage2.png", /*...*/ "signImage12.png"];
-    // string[] public houseImages = ["houseImage1.png", "houseImage2.png", /*...*/ "houseImage12.png"];
     string[] public planetSymbols = ["\u2609", "\u263E", "\u263F", "\u2640", "\u2642", "\u2643", "\u2644", "\u2645", "\u2646", "\u2647", "\u260A", "\u260B"];
     string[] public signSymbols = ["\u2648", "\u2649", "\u264A", "\u264B", "\u264C", "\u264D" "\u264E", "\u264F", "\u2650", "\u2651", "\u2652", "\u2653"];
 
     mapping(uint256 => Astrodice) public tokenIdToAstrodice;
 
-    event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, /* string planetImage, string signImage, string houseImage, */ string planetSymbol, string signSymbol);
+    event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, string planetSymbol, string signSymbol);
 
     constructor() ERC721("AstrodiceNFT", "ADICE") {
         tokenCounter = 0;
@@ -56,9 +50,6 @@ contract AstrodiceNFT is ERC721, Ownable {
             planets[planetIndex],
             signs[signIndex],
             houses[houseIndex],
-            // planetImages[planetIndex],
-            // signImages[signIndex],
-            // houseImages[houseIndex],
             planetSymbols[planetIndex],
             signSymbols[signIndex]
         );
@@ -66,9 +57,13 @@ contract AstrodiceNFT is ERC721, Ownable {
         //Store the Astrodice struct and mint the NFT
         tokenIdToAstrodice[newTokenId] = newAstrodice;
         _safeMint(msg.sender, newTokenId);
-        emit CreatedAstrodice(newTokenId, newAstrodice.planet, newAstrodice.sign, newAstrodice.house,  /* newAstrodice.planetImage, newAstrodice.signImage, newAstrodice.houseImage,*/ newAstrodice.planetSymbol, newAstrodice.signSymbol);
+        emit CreatedAstrodice(newTokenId, newAstrodice.planet, newAstrodice.sign, newAstrodice.house, newAstrodice.planetSymbol, newAstrodice.signSymbol);
 
         tokenCounter += 1;
+    }
+
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
     }
 
 }
