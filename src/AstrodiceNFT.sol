@@ -37,7 +37,7 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
         uint256 newTokenId = tokenCounter;
 
         // Generate a base random number using block attributes and user input
-        uint256 baseRandomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender, newTokenId)));
+        uint256 baseRandomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender, newTokenId)));
 
         // Derive independent random indices for each attribute
         uint256 planetIndex = uint256(keccak256(abi.encodePacked(baseRandomNumber, "planet"))) % planets.length;
