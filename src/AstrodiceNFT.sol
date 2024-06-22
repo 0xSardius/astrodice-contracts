@@ -30,7 +30,7 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
 
     event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, string planetSymbol, string signSymbol);
 
-    constructor() ERC721("AstrodiceNFT", "ADICE") {
+    constructor() ERC721("AstrodiceNFT", "ASTRODICE") {
         tokenCounter = 0;
     }
 
