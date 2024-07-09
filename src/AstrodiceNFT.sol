@@ -28,6 +28,8 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
     mapping(uint256 => Astrodice) public tokenIdToAstrodice;
     mapping(address => Astrodice[]) public ownerToAstrodiceCollection;
 
+    Astrodice[] public listOfAstrodiceReadings;
+
     event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, string planetSymbol, string signSymbol);
 
     constructor() ERC721("AstrodiceNFT", "ASTRODICE") {
@@ -54,9 +56,10 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
             signSymbols[signIndex]
         );
         
-        //Store the Astrodice struct and mint the NFT
+        // Store the Astrodice struct and mint the NFT
         tokenIdToAstrodice[newTokenId] = newAstrodice;
         ownerToAstrodiceCollection[msg.sender].push(newAstrodice);
+        listOfAstrodiceReadings.push(newAstrodice);
         _safeMint(msg.sender, newTokenId);
         emit CreatedAstrodice(newTokenId, newAstrodice.planet, newAstrodice.sign, newAstrodice.house, newAstrodice.planetSymbol, newAstrodice.signSymbol);
 
