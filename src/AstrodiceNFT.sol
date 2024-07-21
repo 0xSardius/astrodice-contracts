@@ -19,7 +19,7 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
         string signSymbol;
     }
 
-    string[] public planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" "North Node", "South Node"];
+    string[] public planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "North Node", "South Node"];
     string[] public signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
     string[] public houses = ["1st House", "2nd House", "3rd House", "4th House", "5th House", "6th House", "7th House", "8th House", "9th House", "10th House", "11th House", "12th House"];
     string[] public planetSymbols = ["\u2609", "\u263E", "\u263F", "\u2640", "\u2642", "\u2643", "\u2644", "\u2645", "\u2646", "\u2647", "\u260A", "\u260B"];
