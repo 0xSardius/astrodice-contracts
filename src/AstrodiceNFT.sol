@@ -17,6 +17,7 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
         string house;
         string planetSymbol;
         string signSymbol;
+        string question;
     }
 
     string[] public planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "North Node", "South Node"];
@@ -30,13 +31,13 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
 
     Astrodice[] public listOfAstrodiceReadings;
 
-    event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, string planetSymbol, string signSymbol);
+    event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, string planetSymbol, string signSymbol, string question);
 
     constructor() ERC721("AstrodiceNFT", "ASTRODICE") {
         tokenCounter = 0;
     }
 
-    function createAstrodiceNFT() public {
+    function createAstrodiceNFT(string memory _question) public {
         uint256 newTokenId = tokenCounter;
 
         // Generate a base random number using block attributes and user input
@@ -53,7 +54,8 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
             signs[signIndex],
             houses[houseIndex],
             planetSymbols[planetIndex],
-            signSymbols[signIndex]
+            signSymbols[signIndex],
+            _question
         );
         
         // Store the Astrodice struct and mint the NFT
@@ -61,7 +63,7 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
         ownerToAstrodiceCollection[msg.sender].push(newAstrodice);
         listOfAstrodiceReadings.push(newAstrodice);
         _safeMint(msg.sender, newTokenId);
-        emit CreatedAstrodice(newTokenId, newAstrodice.planet, newAstrodice.sign, newAstrodice.house, newAstrodice.planetSymbol, newAstrodice.signSymbol);
+        emit CreatedAstrodice(newTokenId, newAstrodice.planet, newAstrodice.sign, newAstrodice.house, newAstrodice.planetSymbol, newAstrodice.signSymbol, newAstrodice.question);
 
         tokenCounter += 1;
     }
@@ -75,6 +77,7 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
             '{"trait_type": "Planet", "value": "', astrodice.planet, '"},',
             '{"trait_type": "Sign", "value": "', astrodice.sign, '"},',
             '{"trait_type": "House", "value": "', astrodice.house, '"}],',
+            '{"trait_type": "Question", "value": "', astrodice.question, '"}],',
             '"planet_symbol": "', astrodice.planetSymbol, '",',
             '"sign_symbol": "', astrodice.signSymbol, '"}'
         ))));
