@@ -2,14 +2,16 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract AstrodiceNFT is ERC721 /* Ownable */ {
+contract AstrodiceNFT is ERC721, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
     uint256 public tokenCounter;
+    uint256 public constant MINT_PRICE = 10 * 10**18; // 10 USD in wei (assuming 1:1 ETH to USD)
 
     struct Astrodice {
         string planet;
@@ -28,27 +30,27 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
 
     mapping(uint256 => Astrodice) public tokenIdToAstrodice;
     mapping(address => Astrodice[]) public ownerToAstrodiceCollection;
+    mapping(address => uint256[]) private userMintedAstrodice;
 
     Astrodice[] public listOfAstrodiceReadings;
 
     event CreatedAstrodice(uint256 tokenId, string planet, string sign, string house, string planetSymbol, string signSymbol, string question);
 
-    constructor() ERC721("AstrodiceNFT", "ASTRODICE") {
+    constructor() ERC721("AstrodiceNFT", "ASTRODICE") Ownable(msg.sender) {
         tokenCounter = 0;
     }
 
-    function createAstrodiceNFT(string memory _question) public {
+    function createAstrodiceNFT(string memory _question) public payable nonReentrant {
+        require(msg.value >= MINT_PRICE, "Insufficient payment");
+        
         uint256 newTokenId = tokenCounter;
 
-        // Generate a base random number using block attributes and user input
         uint256 baseRandomNumber = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender, newTokenId)));
 
-        // Derive independent random indices for each attribute
         uint256 planetIndex = uint256(keccak256(abi.encodePacked(baseRandomNumber, "planet"))) % planets.length;
         uint256 signIndex = uint256(keccak256(abi.encodePacked(baseRandomNumber, "sign"))) % signs.length;
         uint256 houseIndex = uint256(keccak256(abi.encodePacked(baseRandomNumber, "house"))) % houses.length;
 
-        // Create a new Astrodice struct with the randomly selected attributed
         Astrodice memory newAstrodice = Astrodice(
             planets[planetIndex],
             signs[signIndex],
@@ -65,11 +67,12 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
         _safeMint(msg.sender, newTokenId);
         emit CreatedAstrodice(newTokenId, newAstrodice.planet, newAstrodice.sign, newAstrodice.house, newAstrodice.planetSymbol, newAstrodice.signSymbol, newAstrodice.question);
 
+        userMintedAstrodice[msg.sender].push(newTokenId);
         tokenCounter += 1;
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        require(_ownerOf(tokenId) != address(0), "ERC721Metadata: URI query for nonexistent token");
 
         Astrodice memory astrodice = tokenIdToAstrodice[tokenId];
         string memory json = Base64.encode(bytes(string(abi.encodePacked(
@@ -84,4 +87,35 @@ contract AstrodiceNFT is ERC721 /* Ownable */ {
         return string(abi.encodePacked("data:application/json;base64,", json));
     }
 
+    function withdraw() public onlyOwner {
+        uint256 balance = address(this).balance;
+        payable(owner()).transfer(balance);
+    }
+
+    function getTotalMinted() public view returns (uint256) {
+        return tokenCounter;
+    }
+
+    function getAstrodiceByOwner(address owner) public view returns (Astrodice[] memory) {
+        return ownerToAstrodiceCollection[owner];
+    }
+
+    function getAllAstrodiceReadings() public view returns (Astrodice[] memory) {
+        return listOfAstrodiceReadings;
+    }
+
+    function getUserMintedTokens(address user) public view returns (uint256[] memory) {
+        return userMintedAstrodice[user];
+    }
+
+    function getUserMintedAstrodice(address user) public view returns (Astrodice[] memory) {
+        uint256[] memory tokenIds = userMintedAstrodice[user];
+        Astrodice[] memory userAstrodice = new Astrodice[](tokenIds.length);
+        
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            userAstrodice[i] = tokenIdToAstrodice[tokenIds[i]];
+        }
+        
+        return userAstrodice;
+    }
 }
