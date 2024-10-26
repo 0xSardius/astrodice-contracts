@@ -12,7 +12,7 @@ contract AstrodiceNFT is ERC721, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
     uint256 public tokenCounter;
-    uint256 public constant MINT_PRICE = 10 * 10**18; // 10 USD in wei (assuming 1:1 ETH to USD)
+    uint256 public constant MINT_PRICE = 0.0017 ether; // roughly $5 as of 10/26/2024
 
     struct Astrodice {
         string planet;
@@ -21,8 +21,11 @@ contract AstrodiceNFT is ERC721, Ownable, ReentrancyGuard {
         string planetSymbol;
         string signSymbol;
         string question;
+        uint256 timestamp;
+        address requester;
     }
 
+    // Astrodice attributes, arrays for generarting random readings
     string[] public planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "North Node", "South Node"];
     string[] public signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
     string[] public houses = ["1st House", "2nd House", "3rd House", "4th House", "5th House", "6th House", "7th House", "8th House", "9th House", "10th House", "11th House", "12th House"];
@@ -41,7 +44,7 @@ contract AstrodiceNFT is ERC721, Ownable, ReentrancyGuard {
         tokenCounter = 0;
     }
 
-    function createAstrodiceNFT(string memory _question) public payable nonReentrant {
+    function createAstrodiceNFT(string memory _question) public payable nonReentrant whenNotPaused {
         require(msg.value >= MINT_PRICE, "Insufficient payment");
         
         uint256 newTokenId = tokenCounter;
